@@ -1,0 +1,22 @@
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 7rem auto;
+}
+
+.form{
+    border-radius: 8px ;
+    padding: 1.5rem;
+    width: 500px;
+    box-shadow: 0 2px 5px rgb(85, 85, 87);
+}
+.button__login{
+    border: 0.6px;
+    border-radius: 3px;
+    margin: 10px;
+    width: 500px;
+    background-color: rgba(137, 206, 189, 0.7);
+    box-shadow: 0 2px 5px rgb(85, 85, 87);
+}

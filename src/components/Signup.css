@@ -12,11 +12,12 @@
     width: 500px;
     box-shadow: 0 2px 5px rgb(85, 85, 87);
 }
-.button__login{
+.buttonControl{
     border: 0.6px;
     border-radius: 3px;
     margin: 10px;
     width: 500px;
     background-color: rgba(137, 206, 189, 0.7);
     box-shadow: 0 2px 5px rgb(85, 85, 87);
+    padding: 3px;
 }

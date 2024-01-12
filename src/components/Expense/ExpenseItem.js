@@ -7,6 +7,14 @@ function ExpenseItem(props) {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const edithandler = () =>{
+    props.edithandler(props.id)
+    setShow(false)
+  }
+  const deletehandler = ()=>{
+    props.deletehandler(props.id)
+    setShow(false)
+  }
   return (
     <div className="expense-item__description">
       <div style={{ display: "flex", marginLeft: "1rem" }}>
@@ -27,10 +35,10 @@ function ExpenseItem(props) {
             <h4 style={{ marginTop: "3px" }}>Expense:</h4>
             <div className="expense-item__price"> ${props.amount}</div>
           </div>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={edithandler}>
             Edit 
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={deletehandler}>
             Delete
           </Button>
         </Modal.Footer>

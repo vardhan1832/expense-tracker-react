@@ -14,9 +14,12 @@ const ExpenseList = (props) => {
           return (
             <ExpenseItem
               key={expenses.id}
+              id={expenses.id}
               amount={expenses.amount}
               description={expenses.description}
               category={expenses.category}
+              edithandler={(id)=>props.edithandler(id)}
+              deletehandler={(id)=>props.deletehandler(id)}
             />
           );
         })}

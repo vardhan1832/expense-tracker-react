@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef , useEffect} from "react";
 import { Container, Form , Button  } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 
@@ -6,6 +6,32 @@ const ProfileUpdate = () => {
     const history = useHistory()
   const nameref = useRef();
   const imageurlref = useRef();
+  useEffect(()=>{
+    const getuserprofile = async () =>{
+      try{
+        const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${process.env.REACT_APP_AUTH_KEY}`,{
+          method:'POST',
+          body:JSON.stringify({
+            idToken:localStorage.getItem('token')
+          }),
+          headers:{
+            'Content-Type':'application/json'
+          }
+        })
+        const data = await res.json()
+        if(!res.ok){
+          throw new Error(data.error.message)
+        }else{
+          nameref.current.value = data.users[0].displayName;
+          imageurlref.current.value = data.users[0].photoUrl;
+          console.log(data)
+        }
+      }catch(err){
+        console.log(err.message)
+      }
+    }
+    getuserprofile()
+  },[])
   const submitHandler = async (e) => {
     e.preventDefault();
     try {

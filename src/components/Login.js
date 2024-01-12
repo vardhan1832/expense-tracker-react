@@ -80,6 +80,7 @@ const Login = () => {
             }}
           />
         </Form.Group>
+        <Link to='/forgotpassword' style={{display:'flex',marginTop: "5px",textDecoration: "none", color: "black", justifyContent:'center'  }}>Forgot password?</Link>
         <Button
           type="submit"
           variant="primary"

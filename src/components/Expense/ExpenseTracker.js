@@ -1,4 +1,4 @@
-import React , {useState , useRef} from "react";
+import React , {useState , useRef, useEffect} from "react";
 import { Button, Form,  FloatingLabel } from "react-bootstrap";
 import "./ExpenseTracker.css";
 import ExpenseList from "./ExpenseList";
@@ -8,18 +8,57 @@ const ExpenseTracker = () => {
   const descref = useRef()
   const categoryref = useRef()
   const [exparray , setexparray] = useState([])
-  const submithandler = (e) =>{
-    e.preventDefault();
-    const obj = {
-      id:Math.random(),
-      amount:expenseref.current.value,
-      description:descref.current.value,
-      category:categoryref.current.value
+  useEffect(()=>{
+    const fetchexpenses = async () =>{
+      try{
+        const res = await fetch('https://exp-tracker-react-9867a-default-rtdb.firebaseio.com/expenses.json',{
+          method : 'GET',
+          headers:{'Content-Type':'application/json'}
+        })
+        const data = await res.json()
+        if(!res.ok){
+          throw new Error(data.error.message)
+        }else{
+          const array = []
+          for(let [key , value] of Object.entries(data)){
+            array.push({id:key,...value})
+          }
+          setexparray([...array.reverse()])
+          console.log(array)
+        }
+      }catch(err){
+        console.log(err.message)
+      }
     }
-    setexparray(arr=>{
-      return [obj,...arr]
-    })
-    console.log(exparray)
+    fetchexpenses()
+  },[])
+  const submithandler =async (e) =>{
+    e.preventDefault();
+    try{
+      const obj = {
+        amount:expenseref.current.value,
+        description:descref.current.value,
+        category:categoryref.current.value
+      }
+      const res = await fetch(`https://exp-tracker-react-9867a-default-rtdb.firebaseio.com/expenses.json`,{
+        method:"POST",
+        body:JSON.stringify(obj),
+        headers:{
+          'Content-Type':'application/json'
+        }
+      })
+      const data = await res.json()
+      if(!res.ok){
+        throw new Error(data.error.message)
+      }else{
+        setexparray(arr=>{
+          return [{id:data.name,...obj},...arr]
+        })
+        // console.log(data.name)
+      }
+    }catch(err){
+      console.log(err.message)
+    }
   }
   return (
     <React.Fragment>
@@ -51,7 +90,7 @@ const ExpenseTracker = () => {
       </FloatingLabel>
         <Form.Group className="mb-3" controlId="formBasicCategory">
           <Form.Select aria-label="Default select example" ref={categoryref} required>
-            <option disabled selected>Select Category</option>
+            <option disabled>Select Category</option>
             <option value="Education">Education</option>
             <option value="Fees">Fees</option>
             <option value="Medical">Medical</option>

@@ -23,7 +23,7 @@ const NavbarComponent = (props) =>{
           if (!res.ok) {
             throw new Error(data.error.message || "Something went wrong!");
           } else {
-            console.log(data);
+            // console.log(data);
             // localStorage.setItem("isVerified", true)
             alert("please check your email to verify");
           }

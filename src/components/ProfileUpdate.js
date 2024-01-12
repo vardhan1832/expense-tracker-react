@@ -31,7 +31,7 @@ const ProfileUpdate = (props) => {
         } else {
           setname(data.users[0].displayName) ;
           setimage(data.users[0].photoUrl);
-          console.log(data);
+          // console.log(data);
         }
       } catch (err) {
         console.log(err.message);

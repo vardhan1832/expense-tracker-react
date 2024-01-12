@@ -32,7 +32,7 @@ const Login = () => {
       if (!res.ok) {
         throw new Error(data.error.message);
       } else {
-        console.log(data);
+        // console.log(data);
         localStorage.setItem("token", data.idToken);
         alert("Logged in successfully!!");
         history.replace("/expenses");

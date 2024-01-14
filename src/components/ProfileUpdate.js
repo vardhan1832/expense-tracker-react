@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Modal } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 const ProfileUpdate = (props) => {
   const [name,setname] = useState('')
   const [image, setimage] = useState('')
+  const token = useSelector(state=>state.auth.token)
   const namechangehandler = (e) =>{
     setname(e.target.value);
   }
@@ -18,7 +20,7 @@ const ProfileUpdate = (props) => {
           {
             method: "POST",
             body: JSON.stringify({
-              idToken: localStorage.getItem("token"),
+              idToken: token ,
             }),
             headers: {
               "Content-Type": "application/json",
@@ -31,14 +33,14 @@ const ProfileUpdate = (props) => {
         } else {
           setname(data.users[0].displayName) ;
           setimage(data.users[0].photoUrl);
-          // console.log(data);
+          console.log(data);
         }
       } catch (err) {
         console.log(err.message);
       }
     };
     getuserprofile();
-  }, []);
+  }, [token]);
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -47,7 +49,7 @@ const ProfileUpdate = (props) => {
         {
           method: "POST",
           body: JSON.stringify({
-            idToken: localStorage.getItem("token"),
+            idToken: token,
             displayName: name,
             photoUrl: image,
             returnSecureToken: true,

@@ -3,7 +3,10 @@ import { Button, Container, Form } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { authActions } from "../store/auth";
+import { useDispatch } from "react-redux";
 const Login = () => {
+  const dispatch = useDispatch()
   const [showPassword, setShowPassword] = useState(false);
   const history = useHistory();
   const emailref = useRef();
@@ -33,7 +36,11 @@ const Login = () => {
         throw new Error(data.error.message);
       } else {
         // console.log(data);
-        localStorage.setItem("token", data.idToken);
+        dispatch(authActions.login({
+          token: data.idToken,
+          email: data.email
+        }))
+        // localStorage.setItem("token", data.idToken);
         alert("Logged in successfully!!");
         history.replace("/expenses");
       }

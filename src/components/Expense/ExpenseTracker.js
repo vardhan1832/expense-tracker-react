@@ -2,34 +2,45 @@ import React, { useState, useRef, useEffect } from "react";
 import { Button, Form, FloatingLabel } from "react-bootstrap";
 import "./ExpenseTracker.css";
 import ExpenseList from "./ExpenseList";
-
+import { useSelector, useDispatch } from "react-redux";
+import { expenseActions } from "../../store/expense";
+import { authActions } from "../../store/auth";
 const ExpenseTracker = () => {
+  const dispatch = useDispatch();
   const expenseref = useRef();
   const descref = useRef();
   const categoryref = useRef();
   const [isEditing, setisEditing] = useState(false);
   const [editingId, seteditingId] = useState("");
-  const [exparray, setexparray] = useState([]);
+  const exparray = useSelector((state) => state.expense.expenses);
+  const email = localStorage.getItem("email");
   useEffect(() => {
     const fetchexpenses = async () => {
       try {
-        const res = await fetch(
-          "https://exp-tracker-react-9867a-default-rtdb.firebaseio.com/expenses.json",
-          {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
+        if (email) {
+          let modifiedEmail = email.replace(/[@.]/g, "");
+          const res = await fetch(
+            `https://exp-tracker-react-9867a-default-rtdb.firebaseio.com/expenses/${modifiedEmail}.json`,
+            {
+              method: "GET",
+              headers: { "Content-Type": "application/json" },
+            }
+          );
+          const data = await res.json();
+          if (!res.ok) {
+            throw new Error(data.error.message);
+          } else {
+            console.log(data)
+            const array = [];
+            for (let [key, value] of Object.entries(data)) {
+              array.push({ id: key, ...value });
+            }
+            dispatch(expenseActions.addNewExpense([...array.reverse()]));
+            console.log(array);
           }
-        );
-        const data = await res.json();
-        if (!res.ok) {
-          throw new Error(data.error.message);
         } else {
-          const array = [];
-          for (let [key, value] of Object.entries(data)) {
-            array.push({ id: key, ...value });
-          }
-          setexparray([...array.reverse()]);
-          console.log(array);
+          alert("please login again");
+          dispatch(authActions.logout())
         }
       } catch (err) {
         console.log(err.message);
@@ -40,45 +51,60 @@ const ExpenseTracker = () => {
   const submithandler = async (e) => {
     e.preventDefault();
     try {
-      const obj = {
-        amount: expenseref.current.value,
-        description: descref.current.value,
-        category: categoryref.current.value,
-      };
-      let apiforedit = isEditing ? `/${editingId}` : "";
-      const res = await fetch(
-        `https://exp-tracker-react-9867a-default-rtdb.firebaseio.com/expenses${apiforedit}.json`,
-        {
-          method: isEditing ? "PUT" : "POST",
-          body: JSON.stringify(obj),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error.message);
-      } else {
-        if (isEditing) {
-          let newarray = [...exparray]
-          let updatedexpenseindex = newarray.findIndex(
-            (ele) => ele.id === editingId
-          );
-          newarray[updatedexpenseindex].amount = expenseref.current.value;
-          newarray[updatedexpenseindex].description = descref.current.value;
-          newarray[updatedexpenseindex].category = categoryref.current.value;
-          setexparray([...newarray]);
-          setisEditing(false);
-          seteditingId("");
-          expenseref.current.value = ''
-           descref.current.value = ''
-           categoryref.current.value = ''
+      if (email) {
+        let modifiedEmail = email.replace(/[@.]/g, "");
+        const obj = {
+          amount: expenseref.current.value,
+          description: descref.current.value,
+          category: categoryref.current.value,
+        };
+        let apiforedit = isEditing ? `/${editingId}` : "";
+        const res = await fetch(
+          `https://exp-tracker-react-9867a-default-rtdb.firebaseio.com/expenses/${modifiedEmail}${apiforedit}.json`,
+          {
+            method: isEditing ? "PUT" : "POST",
+            body: JSON.stringify(obj),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error.message);
         } else {
-          setexparray((arr) => {
-            return [{ id: data.name, ...obj }, ...arr];
-          });
+          if (isEditing) {
+            let newarray = [...exparray];
+            let updatedexpenseindex = newarray.findIndex(
+              (ele) => ele.id === editingId
+            );
+            const updatedExpense = {
+              id: editingId,
+              amount: expenseref.current.value,
+              description: descref.current.value,
+              category: categoryref.current.value,
+            };
+
+            // Update the array with the new object
+            newarray[updatedexpenseindex] = updatedExpense;
+            dispatch(expenseActions.addNewExpense([...newarray]));
+            setisEditing(false);
+            seteditingId("");
+            expenseref.current.value = "";
+            descref.current.value = "";
+            categoryref.current.value = "";
+          } else {
+            dispatch(
+              expenseActions.addNewExpense([
+                { id: data.name, ...obj },
+                ...exparray,
+              ])
+            );
+          }
         }
+      } else {
+        alert("please login again");
+        dispatch(authActions.logout())
       }
     } catch (err) {
       console.log(err.message);
@@ -101,22 +127,30 @@ const ExpenseTracker = () => {
     );
     if (confirmDelete) {
       try {
-        const res = await fetch(
-          `https://exp-tracker-react-9867a-default-rtdb.firebaseio.com/expenses/${id}.json`,
-          {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-            },
+        if (email) {
+          let modifiedEmail = email.replace(/[@.]/g, "");
+          const res = await fetch(
+            `https://exp-tracker-react-9867a-default-rtdb.firebaseio.com/expenses/${modifiedEmail}/${id}.json`,
+            {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          const data = await res.json();
+          if (!res.ok) {
+            throw new Error(data.error.message);
+          } else {
+            dispatch(
+              expenseActions.addNewExpense([
+                ...exparray.filter((x) => x.id !== id),
+              ])
+            );
           }
-        );
-        const data = await res.json();
-        if (!res.ok) {
-          throw new Error(data.error.message);
         } else {
-          setexparray((arr) => {
-            return arr.filter((x) => x.id !== id);
-          });
+          alert("please login again");
+          dispatch(authActions.logout())
         }
       } catch (err) {
         console.log(err.message);

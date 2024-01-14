@@ -6,9 +6,11 @@ import ForgotPassword from "./screens/ForgotPassword";
 import NavbarComponent from "./components/Layout/Navbar";
 import "./App.css";
 import React, {useState} from "react";
-import { Route, Switch } from "react-router-dom/cjs/react-router-dom.min";
+import { Route, Switch , Redirect } from "react-router-dom/cjs/react-router-dom.min";
+import { useSelector } from "react-redux";
 
 function App() {
+  const auth = useSelector(state=>state.auth.isLoggedIn)
   const [modalShow, setModalShow] = useState(false);
   const modalHandler = () =>{
     setModalShow(true)
@@ -18,13 +20,16 @@ function App() {
     <NavbarComponent  onshowmodal = {modalHandler}/>
     <Switch>
       <Route path="/" exact>
-        <SignUp />
+        {!auth && <SignUp />}
+        {auth && <Redirect to='/expenses'/>}   
       </Route>
       <Route path="/login">
-        <Login />
+        {!auth && <Login />}
+        {auth && <Redirect to='/expenses'/>} 
       </Route>
       <Route path="/expenses">
-        <ExpenseTracker/>
+        {auth && <ExpenseTracker/>}
+        {!auth && <Redirect to='/login'/>}
       </Route>
       <Route path='/forgotpassword'>
         <ForgotPassword/>

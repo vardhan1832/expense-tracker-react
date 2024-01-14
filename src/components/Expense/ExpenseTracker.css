@@ -4,11 +4,31 @@
     padding: 1.5rem;
     width: 600px;
     box-shadow: 0 2px 5px rgb(85, 85, 87);
-    background-color: rgb(73, 71, 71);
+    background-color: #092738;
     position: absolute;
     top: 50%; 
     left: 50%;
     transform: translate(-50%, -50%);
+}
+.form__expense_dark{
+    margin:3rem auto;
+    border-radius: 8px ;
+    padding: 1.5rem;
+    width: 600px;
+    box-shadow: 0 2px 5px rgb(85, 85, 87);
+    background-color: #000000;
+    position: absolute;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.bg{
+    background-color: rgb(114, 105, 105);
+    overflow: hidden; 
+}
+.wbg{
+    background-color: rgb(174, 230, 230);
+    overflow: hidden;
 }
 .main-image {
     margin-top: 2rem;

@@ -3,12 +3,16 @@ import { Navbar, Button, Dropdown } from "react-bootstrap";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { useSelector, useDispatch } from "react-redux";
 import { authActions } from "../../store/auth";
+import { themeActions } from "../../store/theme";
 const NavbarComponent = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const token = useSelector((state) => state.auth.token);
+  const darkmode = useSelector((state) => state.theme.darkmode);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const totalExpenses = useSelector((state) => state.expense.totalExpenses);
+  const isPremium = useSelector((state) => state.auth.isPremium);
+  const exparray = useSelector((state)=>state.expense.expenses)
   const verificationHandler = async () => {
     try {
       const res = await fetch(
@@ -38,13 +42,31 @@ const NavbarComponent = (props) => {
     dispatch(authActions.logout());
     history.replace("/login");
   };
+  const premiumHandler = () => {
+    if (!isPremium) {
+      dispatch(authActions.premium());
+    } else {
+      dispatch(themeActions.toggleTheme());
+    }
+  };
+  const convertToCSV = () => {
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      exparray.map((expense) => Object.values(expense).join(",")).join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "expenses.csv");
+    document.body.appendChild(link);
+    link.click();
+  };
   return (
     <Navbar
       style={{
         height: "5rem",
         display: "flex",
         justifyContent: "space-between",
-        backgroundColor: "black",
+        backgroundColor: darkmode ? "black" : "#092738",
         zIndex: "10",
         position: "fixed",
         left: "0",
@@ -53,7 +75,11 @@ const NavbarComponent = (props) => {
       }}
     >
       <Navbar.Brand
-        style={{ fontWeight: "800", marginLeft: "2rem", color: "white" }}
+        style={{
+          fontWeight: "800",
+          marginLeft: "2rem",
+          color: "white",
+        }}
       >
         Expense Tracker
       </Navbar.Brand>
@@ -66,8 +92,11 @@ const NavbarComponent = (props) => {
           }}
         >
           {totalExpenses > 10000 && (
-            <Button style={{ margin: "2px 5px" }}>Activate Premium</Button>
+            <Button style={{ margin: "2px 5px" }} onClick={premiumHandler}>
+              {isPremium ? "Change Theme" : "Activate Premium"}
+            </Button>
           )}
+          {isPremium && <Button onClick={convertToCSV}>Download Report</Button>}
 
           <Dropdown style={{ margin: "3px 6px" }}>
             <Dropdown.Toggle variant="primary" id="dropdown-basic">

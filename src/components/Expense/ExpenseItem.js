@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import "./ExpenseItem.css";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import { useSelector } from "react-redux";
 function ExpenseItem(props) {
   const [show, setShow] = useState(false);
-
+  const darkmode = useSelector((state) => state.theme.darkmode);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const edithandler = () =>{
@@ -16,9 +17,9 @@ function ExpenseItem(props) {
     setShow(false)
   }
   return (
-    <div className="expense-item__description">
+    <div className={darkmode?'expense-item__description_dark':"expense-item__description"}>
       <div style={{ display: "flex", marginLeft: "1rem" }}>
-        <h4 style={{ marginTop: "3px" }}>Expense:</h4>
+        <h4 style={{ marginTop: "3px",color:'white' }}>Expense:</h4>
         <div className="expense-item__price"> ${props.amount}</div>
       </div>
       <Button variant="primary" onClick={handleShow}>

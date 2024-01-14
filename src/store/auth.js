@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialAuthState = {
         token: localStorage.getItem('token') || null,
-        isLoggedIn: localStorage.getItem('token') ? true : false
+        isLoggedIn: localStorage.getItem('token') ? true : false,
+        isPremium:localStorage.getItem('isPremium') ? localStorage.getItem('isPremium') : false
     }
 
 
@@ -15,12 +16,18 @@ const authSlice = createSlice({
             state.token = action.payload.token
             localStorage.setItem('token',action.payload.token)
             localStorage.setItem('email',action.payload.email)
+            localStorage.setItem('isPremium',false)
         },
         logout:(state)=>{
             state.isLoggedIn=false;
             state.token= null;
             localStorage.removeItem('token')
             localStorage.removeItem('email')
+            localStorage.removeItem('isPremium')
+        },
+        premium:(state)=>{
+            state.isPremium = true
+            localStorage.setItem('isPremium',true)
         }
     }
 })

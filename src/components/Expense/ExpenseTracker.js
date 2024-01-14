@@ -14,6 +14,7 @@ const ExpenseTracker = () => {
   const [editingId, seteditingId] = useState("");
   const exparray = useSelector((state) => state.expense.expenses);
   const email = localStorage.getItem("email");
+  const darkmode = useSelector((state) => state.theme.darkmode);
   useEffect(() => {
     const fetchexpenses = async () => {
       try {
@@ -158,14 +159,14 @@ const ExpenseTracker = () => {
     }
   };
   return (
-    <React.Fragment>
+    <div className={darkmode?'bg':'wbg'}>
       <div className="main-image">
         <img
           src="https://images.pexels.com/photos/4386370/pexels-photo-4386370.jpeg?auto=compress&cs=tinysrgb&w=600"
           alt="Expemses"
         ></img>
       </div>
-      <Form className="form__expense" onSubmit={submithandler}>
+      <Form className={darkmode?'form__expense_dark':"form__expense"} onSubmit={submithandler}>
         <h2
           style={{
             textAlign: "center",
@@ -221,7 +222,7 @@ const ExpenseTracker = () => {
         edithandler={edithandler}
         deletehandler={deletehandler}
       />
-    </React.Fragment>
+    </div>
   );
 };
 

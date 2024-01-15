@@ -24,10 +24,14 @@
 }
 .bg{
     background-color: rgb(114, 105, 105);
+    margin: 0;
+    min-height: 100vh;
     overflow: hidden; 
 }
 .wbg{
     background-color: rgb(174, 230, 230);
+    margin: 0;
+    min-height: 100vh;
     overflow: hidden;
 }
 .main-image {

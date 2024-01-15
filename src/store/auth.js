@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialAuthState = {
         token: localStorage.getItem('token') || null,
         isLoggedIn: localStorage.getItem('token') ? true : false,
-        isPremium:localStorage.getItem('isPremium') ? localStorage.getItem('isPremium') : false
+        isPremium: JSON.parse(localStorage.getItem('isPremium')) || false
     }
 
 

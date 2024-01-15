@@ -162,7 +162,7 @@ const ExpenseTracker = () => {
     <div className={darkmode?'bg':'wbg'}>
       <div className="main-image">
         <img
-          src="https://images.pexels.com/photos/4386370/pexels-photo-4386370.jpeg?auto=compress&cs=tinysrgb&w=600"
+          src="https://images.pexels.com/photos/157520/pexels-photo-157520.jpeg?auto=compress&cs=tinysrgb&w=600"
           alt="Expemses"
         ></img>
       </div>

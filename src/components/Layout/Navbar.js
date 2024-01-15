@@ -12,7 +12,7 @@ const NavbarComponent = (props) => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const totalExpenses = useSelector((state) => state.expense.totalExpenses);
   const isPremium = useSelector((state) => state.auth.isPremium);
-  const exparray = useSelector((state)=>state.expense.expenses)
+  const exparray = useSelector((state) => state.expense.expenses);
   const verificationHandler = async () => {
     try {
       const res = await fetch(
@@ -96,7 +96,8 @@ const NavbarComponent = (props) => {
               {isPremium ? "Change Theme" : "Activate Premium"}
             </Button>
           )}
-          {isPremium && <Button onClick={convertToCSV}>Download Report</Button>}
+          {isPremium && (<Button onClick={convertToCSV}>Download Report</Button>)}
+          
 
           <Dropdown style={{ margin: "3px 6px" }}>
             <Dropdown.Toggle variant="primary" id="dropdown-basic">

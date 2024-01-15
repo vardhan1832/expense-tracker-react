@@ -91,7 +91,7 @@ const NavbarComponent = (props) => {
             marginRight: "3rem",
           }}
         >
-          {totalExpenses > 10000 && (
+          {(totalExpenses > 10000 || isPremium) && (
             <Button style={{ margin: "2px 5px" }} onClick={premiumHandler}>
               {isPremium ? "Change Theme" : "Activate Premium"}
             </Button>

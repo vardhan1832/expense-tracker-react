@@ -48,7 +48,7 @@ const ExpenseTracker = () => {
       }
     };
     fetchexpenses();
-  }, []);
+  }, [dispatch,email]);
   const submithandler = async (e) => {
     e.preventDefault();
     try {
@@ -101,6 +101,9 @@ const ExpenseTracker = () => {
                 ...exparray,
               ])
             );
+            expenseref.current.value = "";
+            descref.current.value = "";
+            categoryref.current.value = "";
           }
         }
       } else {
